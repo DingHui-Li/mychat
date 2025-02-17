@@ -1,0 +1,88 @@
+{
+  "name": "mychat",
+  "version": "1.0.0",
+  "description": "An Electron application with Vue and TypeScript",
+  "main": "./out/main/index.js",
+  "author": "linkssr.cn",
+  "homepage": "https://electron-vite.org",
+  "build": {
+    "asar": true,
+    "asarUnpack": [
+      "out/pydist/**/*"
+    ],
+    "compression": "maximum",
+    "icon": "build/icons/icon.ico",
+    "win": {
+      "icon": "build/icons/icon.ico"
+    },
+    "files": [
+      "out/**/*"
+    ],
+    "extraResources": [
+      {
+        "from": "resources/",
+        "to": "resources/",
+        "filter": [
+          "!**/*.pak"
+        ]
+      }
+    ]
+  },
+  "scripts": {
+    "format": "prettier --write .",
+    "lint": "eslint . --ext .js,.jsx,.cjs,.mjs,.ts,.tsx,.cts,.mts,.vue --fix",
+    "typecheck:node": "tsc --noEmit -p tsconfig.node.json --composite false",
+    "typecheck:web": "vue-tsc --noEmit -p tsconfig.web.json --composite false",
+    "typecheck": "npm run typecheck:node && npm run typecheck:web",
+    "start": "electron-vite preview",
+    "dev": "electron-vite dev --watch",
+    "build": "electron-vite build && npm run build-python && npm run generate-icon",
+    "postinstall": "electron-builder install-app-deps",
+    "build:unpack": "npm run build && electron-builder --dir",
+    "build:win": "npm run build && electron-builder --win",
+    "build:mac": "npm run build && electron-builder --mac",
+    "build:linux": "npm run build && electron-builder --linux",
+    "build-python": "pyinstaller --add-data py/wx/tools/realTime.exe;wx/tools --add-data py/wx/tools/libcrypto-1_1-x64.dll;wx/tools ./py/mychat.py --clean --distpath ./out/pydist",
+    "generate-icon": "electron-icon-builder --input=./resources/icon.png --output=build --flatten"
+  },
+  "dependencies": {
+    "@electron-toolkit/preload": "^3.0.0",
+    "@electron-toolkit/utils": "^3.0.0",
+    "@element-plus/icons-vue": "^2.3.1",
+    "@vue/server-renderer": "^3.5.13",
+    "buffer": "^6.0.3",
+    "echarts": "^5.6.0",
+    "electron-icon-builder": "^2.0.1",
+    "element-plus": "^2.9.4",
+    "fast-xml-parser": "^4.5.1",
+    "less": "^4.2.2",
+    "less-loader": "^12.2.0",
+    "marked": "^15.0.7",
+    "moment": "^2.30.1",
+    "openai": "^4.84.0",
+    "sql.js": "^1.12.0",
+    "virtua": "^0.40.0",
+    "vue-router": "^4.5.0"
+  },
+  "devDependencies": {
+    "@electron-toolkit/eslint-config": "^1.0.2",
+    "@electron-toolkit/eslint-config-ts": "^2.0.0",
+    "@electron-toolkit/tsconfig": "^1.0.1",
+    "@rushstack/eslint-patch": "^1.10.3",
+    "@types/node": "^20.14.8",
+    "@vitejs/plugin-vue": "^5.0.5",
+    "@vue/eslint-config-prettier": "^9.0.0",
+    "@vue/eslint-config-typescript": "^13.0.0",
+    "electron": "^31.0.2",
+    "electron-builder": "^24.13.3",
+    "electron-vite": "^2.3.0",
+    "eslint": "^8.57.0",
+    "eslint-plugin-vue": "^9.26.0",
+    "prettier": "^3.3.2",
+    "rollup-plugin-visualizer": "^5.14.0",
+    "typescript": "^5.5.2",
+    "vite": "^5.3.1",
+    "vue": "^3.4.30",
+    "vue-tsc": "^2.0.22"
+  }
+}
