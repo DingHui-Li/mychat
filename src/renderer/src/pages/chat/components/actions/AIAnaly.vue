@@ -113,15 +113,17 @@ async function startAnaly() {
     let page = 1
     let length = 0
     for (let i = chatData.length; i >= 0; i -= 100) {
-      let sliceArr = chatData.slice(i - 100, i)
-      filterTime.value[0] = new Date(sliceArr[0].time * 1000)
+      let sliceArr = chatData.slice(Math.max(i - 100, 0), i)
       length += JSON.stringify(sliceArr).length
-      if (i == chatData.length) {
-        filterTime.value[1] = new Date(sliceArr[sliceArr.length - 1].time * 1000)
-        let t = `群名为"${activeSession.value?.strNickName}"的群`
-        prompts.push(`分析以下${chatRoomInfo.value ? t : ""}聊天，要求：${condition}：\n第1页：\n${JSON.stringify(sliceArr)}`)
-      } else {
-        prompts.push(`第${page}页：\n${JSON.stringify(sliceArr)}`)
+      if (sliceArr.length) {
+        filterTime.value[0] = new Date(sliceArr[0].time * 1000)
+        if (i == chatData.length) {
+          filterTime.value[1] = new Date(sliceArr[sliceArr.length - 1].time * 1000)
+          let t = `群名为"${activeSession.value?.strNickName}"的群`
+          prompts.push(`分析以下${chatRoomInfo.value ? t : ""}聊天，要求：${condition}：\n第1页：\n${JSON.stringify(sliceArr)}`)
+        } else {
+          prompts.push(`第${page}页：\n${JSON.stringify(sliceArr)}`)
+        }
       }
       page++
       lengthOverflow.value = false

@@ -10,7 +10,7 @@
             <div class="name">{{ name }}</div>
             <div class="progress-box">
               <div class="progress"
-                :style="`background:${colors[index % colors.length]}; width:${data[name] / msgList.length * 100}%`">
+                :style="`background:${colors[index % colors.length]}; width:${data[name] / maxValue * 100}%`">
               </div>
             </div>
           </div>
@@ -21,12 +21,20 @@
 </template>
 <script setup lang="ts">
 import { msgList } from '../../../store/msg'
-import { ref, onMounted } from 'vue'
+import { ref, onMounted, computed } from 'vue'
 
 const data = ref({})
 
 onMounted(() => {
   getData()
+})
+
+const maxValue = computed(() => {
+  let t = 0
+  Object.keys(data.value).forEach(user => {
+    t = Math.max(t, data.value[user])
+  })
+  return t
 })
 
 function getData() {
@@ -71,7 +79,8 @@ const colors = ['#4CAF50', '#CDDC39', '#FFC107', '#3F51B5', '#F44336', '#FF4081'
 
       .name {
         font-size: 14px;
-        width: 50px;
+        width: 25%;
+        min-width: 50px;
         overflow: hidden;
         text-overflow: ellipsis;
         white-space: nowrap;

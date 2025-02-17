@@ -1,11 +1,15 @@
 <template>
   <div class="statistic">
-    <div class="title">统计</div>
-    <el-icon class="close" @click="handleRemoveAction()">
-      <Close />
-    </el-icon>
+    <div class="title">统计
+      <el-icon class="close" @click="handleRemoveAction()">
+        <Close />
+      </el-icon>
+    </div>
     <div class="card">
       <comDistribution />
+    </div>
+    <div class="card">
+      <comChatTime />
     </div>
     <div class="card">
       <comChatTypeChart />
@@ -21,6 +25,7 @@ import { handleRemoveAction } from '../../store/index'
 import comDistribution from './_com_/chatDistribution.vue'
 import comChatTypeChart from './_com_/chatTypeChart.vue'
 import comChatSender from './_com_/chatSender.vue'
+import comChatTime from './_com_/chatTime.vue'
 
 </script>
 <style lang="less" scoped>
@@ -31,6 +36,7 @@ import comChatSender from './_com_/chatSender.vue'
   overflow: auto;
   background-color: #fff;
   padding: 10px 5px;
+  padding-top: 0;
   margin-left: 5px;
   border-radius: 25px;
   min-height: 40vh;
@@ -46,6 +52,12 @@ import comChatSender from './_com_/chatSender.vue'
     font-weight: bold;
     padding: 0 10px;
     margin-bottom: 5px;
+    position: sticky;
+    top: 0;
+    z-index: 9;
+    background-color: #fff;
+    padding-top: 10px;
+    padding-bottom: 5px;
   }
 
   .close {

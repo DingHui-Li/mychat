@@ -6,3 +6,4 @@ out
 build
 pydist
 wxDb
+**/__pycache__/

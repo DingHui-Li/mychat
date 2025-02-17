@@ -1,7 +1,7 @@
 <template>
   <div :id="'msg-' + data.localId">
     <div class="msg-date" v-if="showDate"> {{ moment(data.CreateTime * 1000).format("LLLL") }}</div>
-    <div class="system-msg" v-if="data.TypeName == '系统通知'">
+    <div class="system-msg" v-if="data.TypeName == '系统通知' || data.TypeName == '拍一拍'">
       {{ data.StrContent }}
     </div>
     <div class="single-msg" v-else>
