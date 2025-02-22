@@ -1,3 +1,5 @@
+##### `欢迎为项目点亮⭐️，您的支持是我持续改进的动力！`
+
 # <img src="./resources/icon.png" width="35" height="35" alt="图片描述"> mychat
 
 使用Electron(vue3+ts)和python开发的具有现代化UI和友好交互的**微信聊天数据智能管理分析工具**。
@@ -10,6 +12,7 @@
 - ✅消息类型占比
 - ✅发送者消息数量统计
 - ✅聊天时间统计
+- ✅导出统计图表(v1.1)
 
 2. 聊天导出
 
@@ -53,4 +56,4 @@
 
 ## 感谢
 
-本项目中的微信数据库解密python脚本来自[PyWxDump](https://github.com/xaoyaoo/PyWxDump)项目，非常感谢。
+本项目中的微信数据库解密python脚本来自[PyWxDump](https://github.com/xaoyaoo/PyWxDump)项目。
