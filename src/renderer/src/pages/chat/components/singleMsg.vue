@@ -49,13 +49,7 @@ const showDate = computed(() => {
 })
 
 const talkerDisplayName = computed(() => {
-  if (chatRoomInfo.value) {
-    let index = chatRoomInfo.value.UserNameList.findIndex(name => name == props.data.talker)
-    if (index >= 0) {
-      return chatRoomInfo.value.DisplayNameList[index] || props.data.talkerInfo?.strNickName
-    }
-  }
-  return props.data.talkerInfo?.strNickName//(Remark||NickName)
+  return props.data.talkerInfo?.remark || props.data.talkerInfo?.strNickName//(Remark||NickName)
 })
 
 </script>

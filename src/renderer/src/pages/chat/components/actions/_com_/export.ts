@@ -25,6 +25,14 @@ export const shortcuts = [
       start.setTime(start.getTime() - 3600 * 1000 * 24 * 90)
       return [start, end]
     }
+  },
+  {
+    text: '今年至今',
+    value: () => {
+      const start = new Date(`${new Date().getFullYear()}-1-1`)
+      const end = new Date()
+      return [start, end]
+    }
   }
 ]
 

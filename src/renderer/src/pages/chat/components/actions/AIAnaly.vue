@@ -239,7 +239,7 @@ async function startAnaly() {
       margin-left: 15px;
       background-color: #FF5722;
       color: #fff;
-      border-radius: 7px;
+      border-radius: 0;
       cursor: pointer;
       padding: 2px 10px;
       font-size: 12px;

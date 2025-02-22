@@ -5,11 +5,9 @@
         <Close />
       </el-icon>
     </div>
+    <div class="btn" @click="showLargeStatistics = true">查看详细统计</div>
     <div class="card">
       <comDistribution />
-    </div>
-    <div class="card">
-      <comChatTime />
     </div>
     <div class="card">
       <comChatTypeChart />
@@ -21,7 +19,7 @@
 </template>
 <script setup lang="ts">
 import { Close } from '@element-plus/icons-vue'
-import { handleRemoveAction } from '../../store/index'
+import { handleRemoveAction, showLargeStatistics } from '../../store/index'
 import comDistribution from './_com_/chatDistribution.vue'
 import comChatTypeChart from './_com_/chatTypeChart.vue'
 import comChatSender from './_com_/chatSender.vue'
@@ -79,6 +77,21 @@ import comChatTime from './_com_/chatTime.vue'
     padding: 10px;
     padding-top: 1px;
     margin-bottom: 5px;
+  }
+
+  .btn {
+    background-color: var(--el-color-primary);
+    text-align: center;
+    box-sizing: border-box;
+    margin-right: 5px;
+    padding: 10px;
+    color: #fff;
+    border-radius: 5px;
+    cursor: pointer;
+
+    &:hover {
+      opacity: 0.8;
+    }
   }
 }
 </style>

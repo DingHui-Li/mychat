@@ -39,6 +39,8 @@ export const activeAction = ref<{
   component: any
 }>()
 
+export const showLargeStatistics = ref(false)
+
 export function handleChooseAction(action) {
   if (activeAction.value) {
     handleRemoveAction()

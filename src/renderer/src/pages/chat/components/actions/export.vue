@@ -57,13 +57,15 @@ function exportJSON() {
   let exportList: Array<any> = []
   let startTime = filterTime.value[0].getTime() / 1000
   let endTime = filterTime.value[1].getTime() / 1000
+  // exportList = msgList.value.filter(item => {
+  //   return item.CreateTime >= startTime && item.CreateTime <= endTime
+  // })
   msgList.value.forEach(item => {
     if (item.CreateTime >= startTime && item.CreateTime <= endTime) {
       exportList.push({
-        StrContent: item.TypeName == '文本' ? item.StrContent : `[${item.TypeName}]`,
-        CreateTime: item.CreateTime,
-        talker: item.IsSender ? "我" : item.talkerInfo?.strNickName,
-        msgType: item.TypeName,
+        ...item,
+        BytesExtra: "",
+        CompressContent: ""
       })
     }
   })

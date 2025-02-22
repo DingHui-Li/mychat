@@ -13,6 +13,7 @@ export const listEl = ref()
 
 export function getChatRoomInfo(id) {
   chatRoomInfo.value = undefined
+  msgList.value = []
   return window
     .dbQuery({
       query: `
@@ -46,6 +47,13 @@ export function getMsgList(username) {
         if ((!item.talker || !item.talkerInfo) && !item.IsSender) {
           item.talker = activeSession.value?.strUsrName
           item.talkerInfo = { ...activeSession.value }
+        }
+        if (chatRoomInfo.value) {
+          let index = chatRoomInfo.value.UserNameList.findIndex((name) => name == item.talker)
+          if (index >= 0) {
+            item.talkerInfo.Remark =
+              chatRoomInfo.value.DisplayNameList[index] || item.talkerInfo?.strNickName
+          }
         }
         if (item.StrContent) {
           item.StrContent = xmlParser.parse(item.StrContent)?.revokemsg || item.StrContent

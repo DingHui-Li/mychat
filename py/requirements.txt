@@ -2,3 +2,4 @@ pycryptodomex
 pywin32
 blackboxprotobuf
 lz4
+jieba

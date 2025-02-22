@@ -92,10 +92,13 @@ ipcMain.handle('findMsgDb', async (event, username = '') => {
             WHERE A.UsrName=='${item.talker}'
           `)
           )[0]
-          item.talkerInfo.avatar = item.talkerInfo.smallHeadImgUrl || item.talkerInfo.bigHeadImgUrl
-          item.talkerInfo.strNickName = item.talkerInfo.Remark || item.talkerInfo.NickName
-          delete item.talkerInfo.smallHeadImgUrl
-          delete item.talkerInfo.bigHeadImgUrl
+          if (item.talkerInfo) {
+            item.talkerInfo.avatar =
+              item.talkerInfo.smallHeadImgUrl || item.talkerInfo.bigHeadImgUrl
+            item.talkerInfo.strNickName = item.talkerInfo.Remark || item.talkerInfo.NickName
+            delete item.talkerInfo.smallHeadImgUrl
+            delete item.talkerInfo.bigHeadImgUrl
+          }
           // db.exec(`
           //   UPDATE MSG
           //   SET Talker=${item.talker},TalkerInfo=${JSON.stringify(item.talkerInfo)}
@@ -109,7 +112,7 @@ ipcMain.handle('findMsgDb', async (event, username = '') => {
     list.push(...result)
   }
   // console.log(list)
-  return list
+  return list.sort((a, b) => a.CreateTime - b.CreateTime)
 })
 
 function getTalker(BytesExtra) {

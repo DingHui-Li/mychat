@@ -11,6 +11,7 @@ type Msg = {
   TypeName: string
   talker: string
   talkerInfo: {
+    Remark: string
     avatar: string
     strNickName: string
     UserName: string
@@ -32,6 +33,9 @@ type Session = {
 interface Window {
   dbQuery: Function
   findMsgDb: Function
+}
+interface Date {
+  format: Function
 }
 
 type Contact = {

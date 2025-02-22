@@ -11,6 +11,9 @@
         </div>
       </Transition>
     </div>
+    <Transition name="page">
+      <comLargeStatistics v-if="showLargeStatistics && msgList.length" />
+    </Transition>
     <Transition name="action">
       <div class="right-side" v-if="activeSessionIndex >= 0 && activeAction">
         <component :is="activeAction.component" />
@@ -22,11 +25,11 @@
 import comSessionList from './components/session.vue'
 import comContent from './components/content.vue'
 import comAction from './components/actions.vue'
-
+import comLargeStatistics from './components/largeStatistics.vue'
 
 import { activeSessionIndex } from './store/session'
 import { msgList } from './store/msg'
-import { activeAction } from './store/index'
+import { activeAction, showLargeStatistics } from './store/index'
 
 </script>
 <style lang="less" scoped>
@@ -36,6 +39,7 @@ import { activeAction } from './store/index'
   display: flex;
   padding: 0 !important;
   background-color: transparent !important;
+  transform: scale(1);
 
   .container {
     width: 100%;
@@ -51,6 +55,7 @@ import { activeAction } from './store/index'
     }
 
     .content-container {
+      position: relative;
       flex: 1;
       overflow: hidden;
       display: flex;

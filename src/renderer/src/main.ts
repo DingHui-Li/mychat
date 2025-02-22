@@ -4,6 +4,7 @@ import ElementPlus from 'element-plus'
 import 'element-plus/dist/index.css'
 import WrapElLoading from './plugins/elLoading'
 import './util/indexDb.js'
+import './util/util.js'
 
 import { createApp } from 'vue'
 import App from './App.vue'

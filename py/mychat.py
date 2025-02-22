@@ -5,6 +5,7 @@ import os
 import sys
 from urllib.parse import parse_qs, urlparse
 from wx import get_wx_info,batch_decrypt,merge_real_time_db
+import jieba
 
 class ApiHTTPRequestHandler(BaseHTTPRequestHandler):
     
@@ -39,10 +40,9 @@ class ApiHTTPRequestHandler(BaseHTTPRequestHandler):
                 response['out_path']=out_path
                 response['db_path']=filtered_files[-1]
             except Exception as e:
-                exc_type, exc_value, exc_traceback = sys.exc_info()
-                self.send_response({"msg":exc_value})
+                self.send_response(400)
                 self.end_headers()
-                self.wfile.write(e)
+                self.wfile.write('')
                 return
             self.wfile.write(json.dumps(response).encode())
         else:
@@ -73,7 +73,27 @@ class ApiHTTPRequestHandler(BaseHTTPRequestHandler):
                 self.wfile.write(e)
                 return
             self.wfile.write(json.dumps(response).encode())
-        if self.path == '/api/parseextra':
+        # if self.path == '/api/parseextra':
+        #     self.send_response(200)
+        #     self.send_header('Content-type', 'application/json')
+        #     self.send_header('Access-Control-Allow-Origin', '*')
+        #     self.send_header('Access-Control-Allow-Methods', 'GET, POST, OPTIONS')
+        #     self.send_header('Access-Control-Allow-Headers', 'Content-Type')
+        #     self.end_headers()
+        #     content_length = int(self.headers.get('Content-Length', 0))
+        #     post_data = self.rfile.read(content_length)
+        #     result=""
+        #     try:
+        #         # data = json.loads(post_data.decode('utf-8'))
+        #         # print(data)
+        #         result=decompress_CompressContent(post_data)
+        #     except json.JSONDecodeError:
+        #         self.send_response(400)
+        #         self.end_headers()
+        #         self.wfile.write(b'Invalid JSON')
+        #         return
+        #     self.wfile.write(json.dumps({"data":result}).encode())
+        if self.path == '/api/wordcut':
             self.send_response(200)
             self.send_header('Content-type', 'application/json')
             self.send_header('Access-Control-Allow-Origin', '*')
@@ -84,13 +104,16 @@ class ApiHTTPRequestHandler(BaseHTTPRequestHandler):
             post_data = self.rfile.read(content_length)
             result=""
             try:
-                # data = json.loads(post_data.decode('utf-8'))
-                # print(data)
-                result=decompress_CompressContent(post_data)
-            except json.JSONDecodeError:
+                params = json.loads(post_data.decode('utf-8'))
+                result=jieba.cut(params['content'])
+                def is_not_special_char(s):
+                    if s.isalpha() or '\u4e00' <= s <= '\u9fff':
+                        return True
+                result=list(filter(is_not_special_char,result))
+            except Exception as e:
                 self.send_response(400)
                 self.end_headers()
-                self.wfile.write(b'Invalid JSON')
+                self.wfile.write('')
                 return
             self.wfile.write(json.dumps({"data":result}).encode())
     def do_OPTIONS(self):

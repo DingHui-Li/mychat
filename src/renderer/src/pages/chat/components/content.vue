@@ -7,7 +7,9 @@
         </div>
       </div>
       <div class="actions">
-        <el-button @click="getRealtimeMsg" :loading="refreshing" :icon="Refresh" circle type="primary"></el-button>
+        <el-tooltip content="获取实时消息" placement="left">
+          <el-button @click="getRealtimeMsg" :loading="refreshing" :icon="Refresh" circle type="primary"></el-button>
+        </el-tooltip>
       </div>
     </div>
     <div class="list">

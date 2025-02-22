@@ -49,7 +49,7 @@ export async function getList() {
   }
 }
 
-export function handleChooseSession(index) {
+export async function handleChooseSession(index) {
   if (activeSessionIndex.value == index || !sessionList.value) {
     return
   }
@@ -57,14 +57,14 @@ export function handleChooseSession(index) {
   let item = sessionList.value[index]
   if (activeSessionIndex.value >= 0) {
     activeSessionIndex.value = -1
-    setTimeout(() => {
+    setTimeout(async () => {
       activeSessionIndex.value = index
-      getChatRoomInfo(item.strUsrName)
+      await getChatRoomInfo(item.strUsrName)
       getMsgList(item.strUsrName)
     }, 300)
   } else {
     activeSessionIndex.value = index
-    getChatRoomInfo(item.strUsrName)
+    await getChatRoomInfo(item.strUsrName)
     getMsgList(item.strUsrName)
   }
 }
