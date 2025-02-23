@@ -2,24 +2,26 @@
   <div class="daily-chat-distribution">
     <div class="label">
       每日聊天分布
+      <comLoading v-if="AIing" />
     </div>
     <div class="charts">
-      <div class="desc" style="margin-bottom: 0;">
+      <div class="desc" v-html="AIResult"></div>
+      <div class="desc" v-if="!AIResult" style="margin-bottom: 0;">
         在<span>{{ periodTotalDayCount }}</span>天里,
         有<span>{{ Object.keys(dailyData).length
           }}</span>天有过交流，占比 <span>{{ (Object.keys(dailyData).length / periodTotalDayCount * 100).toFixed(1) }}%</span>;
         <span>{{ new Date(maxPeriod[0]).format('yyyy年M月') }}</span>荣登「话痨冠军月」;
         <span>{{ new Date(maxCountDay).format('M月d日') }}</span>单日输出 <span>{{ dailyData[maxCountDay] }}</span> 条.
       </div>
-      <div class="desc">
+      <div class="desc" v-if="!AIResult">
         每人平均发送 <span>{{ chatRoomCountData.avg }}</span> 条消息;
         <template v-if="!chatRoomInfo">
           双方消息量相差< <span>{{ countDeviation * 100 }}%</span>({{ countDeviation < 0.15 ? '高度均衡' : countDeviation < 0.3
-          ? '轻度失衡' : countDeviation < 0.5 ? '显著失衡' : '极端垄断' }}). </template>
+        ? '轻度失衡' : countDeviation < 0.5 ? '显著失衡' : '极端垄断' }}). </template>
               <template v-else>
                 有 <span>{{ chatRoomCountData.greaterRate * 100 }}%</span>的用户相对活跃.
                 话题主导者: <span style="max-width: 50px;overflow: hidden;text-overflow: ellipsis;">{{
-          chatRoomCountData.activeUser?.name }}</span>;
+        chatRoomCountData.activeUser?.name }}</span>;
                 个体偏离度<span>{{ chatRoomCountData.deviation * 100 }}%</span>
                 ({{ chatRoomCountData.deviation < 0.3 ? '轻度主导' : chatRoomCountData.deviation < 0.5 ? '显著主导' : '完全主导' }})
                   </template>
@@ -39,9 +41,21 @@
   </div>
 </template>
 <script setup lang="ts">
-import { defineProps, computed, shallowRef, ref, onMounted, nextTick } from 'vue'
+import { defineProps, computed, shallowRef, ref, onMounted, nextTick, defineExpose } from 'vue'
 import * as echarts from 'echarts';
 import { chatRoomInfo } from '../../store/msg';
+import comLoading from '@renderer/components/pulseLoading.vue'
+import useAI from './useAI'
+
+const { AIing, callAI, AIResult, clearAICache } = useAI('dailyChatDistribution')
+defineExpose({
+  AIAnaly: () => {
+    if (!Object.keys(dailyDataForPerson).length) return
+    let prompt = `分析以下各用户不同时间消息发送数量的数据:\n${JSON.stringify(dailyDataForPerson.value)}`
+    callAI([prompt])
+  },
+  clearAICache
+})
 
 const props = defineProps<{ msgList: Array<any>, timeRange: Array<Date> }>()
 const itemEl = ref()
@@ -465,11 +479,11 @@ function findMaxPeriod(data, periodType = 'month') {
 
   .label {
     position: relative;
-    font-size: 16px;
+    font-size: 20px;
     font-weight: bold;
     display: flex;
     align-items: center;
-    justify-content: space-between;
+    justify-content: flex-start;
 
     .action {
       .icon {
@@ -508,8 +522,8 @@ function findMaxPeriod(data, periodType = 'month') {
       position: relative;
       width: 100%;
       background-color: transparent;
-      font-size: 12px;
-      color: #666;
+      font-size: 14px;
+      color: #555;
       box-sizing: border-box;
       margin-bottom: 10px;
 

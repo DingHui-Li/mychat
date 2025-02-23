@@ -27,10 +27,10 @@ let exportList = computed(() => {
 <style lang="less" scoped>
 .export-html {
   height: 100%;
-  overflow: hidden;
+  overflow: auto;
 
   .list {
-    height: 100%;
+    height: fit-content;
     overflow: auto;
   }
 }

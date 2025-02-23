@@ -40,7 +40,7 @@ const maxValue = computed(() => {
 function getData() {
   let t = {}
   msgList.value.forEach(item => {
-    let name = item.IsSender ? "我" : (item.talkerInfo?.strNickName || '未知')
+    let name = item.IsSender ? "我" : (item.talkerInfo?.Remark || item.talkerInfo?.strNickName || '未知')
     t[name] = (t[name] || 0) + 1
   })
   data.value = t

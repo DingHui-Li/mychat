@@ -136,8 +136,6 @@ function getExportFileName(type = 'json') {
   overflow: auto;
   background-color: #fff;
   padding: 10px 15px;
-  margin-left: 5px;
-  border-radius: 25px;
   color: #333;
   padding-bottom: 15px;
 

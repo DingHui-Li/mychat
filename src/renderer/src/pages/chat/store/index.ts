@@ -10,24 +10,28 @@ export const actions = [
     icon: PieChart,
     label: '统计',
     key: 'statistic',
+    color: '#3F51B5',
     component: comStatistic
   },
   {
     icon: Wallet,
     label: '导出',
     key: 'export',
+    color: '#4CAF50',
     component: comExport
   },
   {
     icon: MagicStick,
     label: '回复建议',
     key: 'suggest',
+    color: '#E91E63',
     component: comSuggest
   },
   {
     icon: Lollipop,
     label: 'AI分析',
     key: 'AIAnaly',
+    color: '#FF9800',
     component: comAIAnaly
   }
 ]
@@ -42,6 +46,7 @@ export const activeAction = ref<{
 export const showLargeStatistics = ref(false)
 
 export function handleChooseAction(action) {
+  if (action?.key == activeAction.value?.key) return
   if (activeAction.value) {
     handleRemoveAction()
     setTimeout(() => {

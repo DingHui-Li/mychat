@@ -84,6 +84,7 @@ ipcMain.handle('findMsgDb', async (event, username = '') => {
       if (!item.talker && item.BytesExtra && !item.IsSender) {
         try {
           item.talker = getTalker(item.BytesExtra)
+          delete item.BytesExtra
           item.talkerInfo = parseSQLResult(
             MicroMsgDb.exec(`
             SELECT A.smallHeadImgUrl,A.bigHeadImgUrl,B.UserName,B.Remark,B.NickName
@@ -104,6 +105,7 @@ ipcMain.handle('findMsgDb', async (event, username = '') => {
           //   SET Talker=${item.talker},TalkerInfo=${JSON.stringify(item.talkerInfo)}
           //   WHERE localId=${item.localId}
           // `)
+          delete item.CompressContent
         } catch (e) {
           console.log(e)
         }

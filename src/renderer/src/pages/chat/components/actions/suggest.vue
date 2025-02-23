@@ -121,8 +121,6 @@ async function startAnaly() {
   background-color: #fff;
   padding: 10px 15px;
   padding-top: 0;
-  margin-left: 5px;
-  border-radius: 25px;
   min-height: 40vh;
   color: #333;
 

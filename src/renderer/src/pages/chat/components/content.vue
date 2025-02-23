@@ -116,7 +116,7 @@ function getRealtimeMsg() {
   .list {
     flex: 1;
     overflow: auto;
-    padding: 10px;
+    padding: 0 10px;
     padding-right: 0;
 
     .v-list {

@@ -108,7 +108,7 @@ async function startAnaly() {
       loading.value = false
       return
     }
-    const condition = `从核心话题与事件、 关系分析、聊天节奏、互动方式、情感表达、用户画像、隐含需求与建议，最后进行总结。`
+    const condition = `从核心话题与事件、 关系分析、聊天节奏、互动方式、情感波动、情感表达、用户画像、隐含需求与建议，最后进行总结。`
     let prompts: Array<string> = []
     let page = 1
     let length = 0
@@ -189,9 +189,6 @@ async function startAnaly() {
   background-color: #fff;
   padding: 10px 15px;
   padding-top: 0;
-  margin-left: 5px;
-  border-radius: 25px;
-  min-height: 40vh;
   color: #333;
 
   .disabled {

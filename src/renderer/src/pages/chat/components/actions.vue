@@ -3,7 +3,7 @@
     <div :class="['item', activeAction?.key == item.key && 'active']" v-for="item in actions"
       @click="handleChooseAction(item)">
       <div class="icon-box">
-        <el-icon class="icon">
+        <el-icon class="icon" :style="`color:${item.color}`">
           <component :is="item.icon" />
         </el-icon>
       </div>
@@ -41,7 +41,7 @@ import { actions, handleChooseAction, activeAction } from '../store/index'
         background-color: var(--el-color-primary);
 
         .icon {
-          color: #fff;
+          color: #fff !important;
         }
       }
     }

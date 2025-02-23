@@ -1,6 +1,9 @@
 <template>
   <div class="word-distribution">
-    <div class="label">常用词</div>
+    <div class="label">常用词
+      <comLoading v-if="AIing" />
+    </div>
+    <div class="desc" v-html="AIResult"></div>
     <div class="word-cloud" ref="boxEl" v-loading="loading">
       <div class="chart-box" v-for="name in Object.keys(wordCountOfPerson)">
         <div class="chart" ref="wordChartEl" :style="`height:${(boxEl?.clientWidth - 20) / 4}px`"></div>
@@ -10,10 +13,23 @@
   </div>
 </template>
 <script setup lang="ts">
-import { defineProps, ref, onMounted, nextTick } from 'vue'
+import { defineProps, ref, onMounted, nextTick, defineExpose } from 'vue'
 import { chatRoomInfo } from '../../store/msg'
 import * as echarts from 'echarts';
 import 'echarts-wordcloud';
+import comLoading from '@renderer/components/pulseLoading.vue'
+import useAI from './useAI'
+
+const { AIing, callAI, AIResult, clearAICache } = useAI('wordDistribution')
+
+defineExpose({
+  AIAnaly: () => {
+    if (!Object.keys(wordCountOfPerson.value).length) return
+    let prompt = `分析以下对话中出现的高频词汇数据：\n${JSON.stringify(wordCountOfPerson.value)}`
+    callAI([prompt])
+  },
+  clearAICache
+})
 
 const props = defineProps<{ msgList: Array<any> }>()
 const boxEl = ref()
@@ -74,7 +90,7 @@ function getWordCount(list: Array<Msg>) {
     });
     let top200WordList = Object.keys(t).map(word => word).sort((a, b) => {
       return t[b] - t[a]
-    }).slice(0, 300)
+    }).slice(0, 500)
     let result = {}
     Object.keys(t).forEach(word => {
       if (top200WordList.includes(word)) {
@@ -102,7 +118,7 @@ function renderWordCloud() {
         height: '100%',
         right: null,
         bottom: null,
-        sizeRange: [12, 20],
+        sizeRange: [15, 30],
         rotationRange: [0, 0],
         gridSize: 8,
         drawOutOfBound: false,
@@ -146,17 +162,33 @@ function renderWordCloud() {
 
   .label {
     position: relative;
-    font-size: 16px;
-    margin-bottom: 5px;
+    font-size: 20px;
     display: flex;
     align-items: center;
-    justify-content: space-between;
+    justify-content: flex-start;
     font-weight: bold;
+  }
+
+  .desc {
+    font-size: 14px;
+    color: #555;
+    margin-bottom: 10px;
+
+    span {
+      font-weight: bold;
+    }
+
+    &:deep(hr) {
+      margin: 5px;
+    }
   }
 
   .word-cloud {
     display: flex;
     flex-wrap: wrap;
+    background-color: #fff;
+    padding: 10px;
+    border-radius: 20px;
 
     .chart-box {
       position: relative;
@@ -165,7 +197,7 @@ function renderWordCloud() {
       min-height: 150px;
       border-radius: 20px;
       box-sizing: border-box;
-      margin-right: 5px;
+      margin: 0 5px;
       padding: 5px;
       padding-bottom: 0;
 

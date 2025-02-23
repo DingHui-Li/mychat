@@ -5,7 +5,7 @@
         <Close />
       </el-icon>
     </div>
-    <div class="btn" @click="showLargeStatistics = true">查看详细统计</div>
+    <div class="btn" @click="showLargeStatistics = true">生成报告</div>
     <div class="card">
       <comDistribution />
     </div>
@@ -23,7 +23,6 @@ import { handleRemoveAction, showLargeStatistics } from '../../store/index'
 import comDistribution from './_com_/chatDistribution.vue'
 import comChatTypeChart from './_com_/chatTypeChart.vue'
 import comChatSender from './_com_/chatSender.vue'
-import comChatTime from './_com_/chatTime.vue'
 
 </script>
 <style lang="less" scoped>
@@ -35,8 +34,6 @@ import comChatTime from './_com_/chatTime.vue'
   background-color: #fff;
   padding: 10px 5px;
   padding-top: 0;
-  margin-left: 5px;
-  border-radius: 25px;
   min-height: 40vh;
   color: #333;
 

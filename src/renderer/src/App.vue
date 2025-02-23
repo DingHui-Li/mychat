@@ -44,7 +44,7 @@ const route = useRoute()
       box-sizing: border-box;
       padding: 10px;
       background-color: #fff;
-      border-radius: 25px;
+      border-radius: 10px;
     }
   }
 }

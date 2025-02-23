@@ -1,7 +1,11 @@
 <template>
   <div class="chat-type-chart">
-    <div class="label">消息类型占比</div>
-    <div class="desc">
+    <div class="label">消息类型占比
+      <comLoading v-if="AIing" />
+    </div>
+    <div class="desc" v-html="AIResult">
+    </div>
+    <div class="des" v-if="!AIResult">
       <span> {{ typeCountList[0].type }}</span> 类型消息以 <span>{{ typeCountList[0].rate }}</span> 占比主导交互场景，
       <template v-if="typeCountList.length >= 1">
         <span>{{ typeCountList[1].type }}({{ typeCountList[1].rate }})</span>
@@ -27,8 +31,21 @@
   </div>
 </template>
 <script setup lang="ts">
-import { ref, shallowRef, onMounted, defineProps, computed, nextTick } from 'vue'
+import { ref, shallowRef, onMounted, defineProps, computed, nextTick, defineExpose } from 'vue'
 import * as echarts from 'echarts';
+import comLoading from '@renderer/components/pulseLoading.vue'
+import useAI from './useAI'
+
+const { AIing, callAI, AIResult, clearAICache } = useAI('chatTypeChart')
+defineExpose({
+  AIAnaly: () => {
+    if (!Object.keys(typeDataByPerson).length) return
+    let prompt = `分析以下各用户不同类型消息发送数量的数据:\n${JSON.stringify(typeDataByPerson.value)}`
+    callAI([prompt])
+  },
+  clearAICache
+})
+
 const props = defineProps<{ msgList: Array<any> }>()
 const chartEl = ref()
 const chartIns = shallowRef()
@@ -45,8 +62,8 @@ onMounted(() => {
   })
 })
 
-const colors = ['#7879ef70', '#FF408170', '#00968870',
-  '#9C27B070', '#7C4DFF70', '#03A9F470',
+const colors = ['#7879ef70', '#7C4DFF70', '#03A9F470', '#FF408170', '#00968870',
+  '#9C27B070',
   '#4CAF5070', '#CDDC3970', '#FFC10770',
   '#FF572270', '#79554870', '#607D8B70']
 const types = ['语音', '转账', '语音通话', '视频', '文本', '动画表情', '图片', '其他']
@@ -215,16 +232,16 @@ function renderRadarChart() {
 
   .label {
     position: relative;
-    font-size: 16px;
+    font-size: 20px;
     display: flex;
     align-items: center;
-    justify-content: space-between;
+    justify-content: flex-start;
     font-weight: bold;
   }
 
   .desc {
-    font-size: 12px;
-    color: #666;
+    font-size: 14px;
+    color: #555;
     margin-bottom: 10px;
 
     span {

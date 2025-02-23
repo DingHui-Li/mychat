@@ -47,7 +47,7 @@ import { activeAction, showLargeStatistics } from './store/index'
     display: flex;
     overflow: hidden;
     background-color: #fff;
-    border-radius: 25px;
+    // border-radius: 5px;
 
     .list-container {
       height: 100%;
@@ -70,6 +70,7 @@ import { activeAction, showLargeStatistics } from './store/index'
     overflow-y: auto;
     // min-width: 250px;
     max-width: 30vw;
+    margin-left: 5px;
   }
 }
 
@@ -82,7 +83,7 @@ import { activeAction, showLargeStatistics } from './store/index'
 .action-leave-to {
   opacity: 0;
   transform: translateX(20px);
-  width: 10vw;
+  width: 0;
 }
 
 .action-enter-to,

@@ -1,8 +1,10 @@
 <template>
   <div class="daily-chat-periods">
     <div class="label">每日聊天时间段
+      <comLoading v-if="AIing" />
     </div>
-    <div class="desc">
+    <div class="desc" v-html="AIResult"></div>
+    <div class="desc" v-if="!AIResult">
       在 <span>{{ Object.keys(dailyPeriodData).length }}</span> 个活跃时段中,
       有<span>{{ (dailyPeriodData[maxCountPeriod] / msgList.length * 100).toFixed(1) }}%</span> 的互动发生在
       <span>{{ maxCountPeriod }}:00~{{ maxCountPeriod }}:59</span> ({{ maxCountPeriodDesc?.name }}).
@@ -13,8 +15,20 @@
   </div>
 </template>
 <script setup lang="ts">
-import { defineProps, computed, shallowRef, ref, onMounted, nextTick } from 'vue'
+import { defineProps, computed, shallowRef, ref, onMounted, nextTick, defineExpose } from 'vue'
 import * as echarts from 'echarts';
+import comLoading from '@renderer/components/pulseLoading.vue'
+import useAI from './useAI'
+
+const { AIing, callAI, AIResult, clearAICache } = useAI('dailyChatPeriods')
+defineExpose({
+  AIAnaly: () => {
+    if (!Object.keys(dailyPeriodForPerson).length) return
+    let prompt = `分析以下各用户不同时间段消息发送数量的数据:\n${JSON.stringify(dailyPeriodForPerson.value)}`
+    callAI([prompt])
+  },
+  clearAICache
+})
 
 const props = defineProps<{ msgList: Array<any> }>()
 const lineChartEl = ref()
@@ -191,16 +205,16 @@ function renderLineChart() {
 
   .label {
     position: relative;
-    font-size: 16px;
+    font-size: 20px;
     display: flex;
     align-items: center;
-    justify-content: space-between;
+    justify-content: flex-start;
     font-weight: bold;
   }
 
   .desc {
-    font-size: 12px;
-    color: #666;
+    font-size: 14px;
+    color: #555;
     margin-bottom: 10px;
 
     span {

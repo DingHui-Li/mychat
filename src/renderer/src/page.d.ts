@@ -16,8 +16,6 @@ type Msg = {
     strNickName: string
     UserName: string
   }
-  CompressContent: any
-  BytesExtra: any
 }
 
 type Session = {
