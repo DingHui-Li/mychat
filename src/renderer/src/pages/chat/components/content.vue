@@ -66,7 +66,7 @@ function getRealtimeMsg() {
           refreshing.value = false
         })
     }
-  }).catch(() => {
+  }).finally(() => {
     refreshing.value = false
   })
 }

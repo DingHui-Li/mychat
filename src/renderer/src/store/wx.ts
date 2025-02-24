@@ -53,6 +53,7 @@ export function syncWxDb() {
       'Content-Type': 'application/json'
     },
     body: JSON.stringify({
+      wxid: wxinfo.value.wxid,
       key: wxinfo.value.key,
       wxPath: wxinfo.value.wx_dir
     })

@@ -25,11 +25,10 @@ export async function getList() {
     WHERE A.strUsrName NOT LIKE 'gh_%' 
     AND A.strUsrName != '@publicUser' 
     AND A.strUsrName != 'notification_messages'
-    AND A.strUsrName != "notifymessage"
-    AND A.strUsrName != "weixin"
+    AND A.strUsrName != 'notifymessage'
+    AND A.strUsrName != 'weixin'
     AND A.strNickName != ''
-    ORDER BY A.nTime DESC
-    ;`,
+    ORDER BY A.nTime DESC;`,
     dbname: 'de_MicroMsg'
   })
   let xmlParser = new XMLParser()

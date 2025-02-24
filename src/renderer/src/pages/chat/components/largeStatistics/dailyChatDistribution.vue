@@ -509,6 +509,7 @@ function findMaxPeriod(data, periodType = 'month') {
       background-color: #fff;
       border-radius: 20px;
       margin-right: 5px;
+      padding-bottom: 5px;
 
       .chart {
         width: 100%;

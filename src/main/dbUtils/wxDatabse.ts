@@ -3,6 +3,7 @@ import Database from 'sql.js/dist/sql-wasm.js'
 import { ipcMain } from 'electron'
 import fs from 'fs'
 import { findFiles, parseSQLResult, parseMsgType } from './util'
+import { XMLParser } from 'fast-xml-parser'
 
 let MicroMsgDb: Database
 let MsgDbPool: Array<Database> = []
@@ -78,13 +79,15 @@ ipcMain.handle('findMsgDb', async (event, username = '') => {
       ORDER BY CreateTime ASC
     `)
     result = parseSQLResult(result)
+    let xmlParser = new XMLParser({
+      ignoreAttributes: false
+    })
     for (const index in result) {
       let item = result[index]
       item.TypeName = parseMsgType(item.Type, item.SubType)
       if (!item.talker && item.BytesExtra && !item.IsSender) {
         try {
           item.talker = getTalker(item.BytesExtra)
-          delete item.BytesExtra
           item.talkerInfo = parseSQLResult(
             MicroMsgDb.exec(`
             SELECT A.smallHeadImgUrl,A.bigHeadImgUrl,B.UserName,B.Remark,B.NickName
@@ -110,6 +113,17 @@ ipcMain.handle('findMsgDb', async (event, username = '') => {
           console.log(e)
         }
       }
+      try {
+        if (item.StrContent) {
+          let xmlParseResult = xmlParser.parse(item.StrContent)
+          item.StrContent = xmlParseResult.revokemsg || item.StrContent
+          if (xmlParseResult.msg?.emoji) {
+            item.StrContent = xmlParseResult.msg?.emoji['@_cdnurl']
+          }
+          // item.xmlParseResult = xmlParseResult
+        }
+      } catch {}
+      delete item.BytesExtra
     }
     list.push(...result)
   }

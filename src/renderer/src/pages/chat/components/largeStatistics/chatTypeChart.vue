@@ -7,9 +7,9 @@
     </div>
     <div class="des" v-if="!AIResult">
       <span> {{ typeCountList[0].type }}</span> 类型消息以 <span>{{ typeCountList[0].rate }}</span> 占比主导交互场景，
-      <template v-if="typeCountList.length >= 1">
+      <template v-if="typeCountList.length >= 2">
         <span>{{ typeCountList[1].type }}({{ typeCountList[1].rate }})</span>
-        <template v-if="typeCountList.length >= 2">
+        <template v-if="typeCountList.length >= 3">
           与 <span>{{ typeCountList[2].type }}({{ typeCountList[2].rate }})</span>
         </template>
         类型消息构成补充生态。

@@ -87,7 +87,7 @@ async function startAnaly() {
     msgList.value.forEach(item => {
       if (item.CreateTime >= startTime && item.CreateTime <= endTime) {
         chatData.push({
-          sender: item.IsSender ? "我" : item.talkerInfo?.strNickName,
+          sender: item.IsSender ? "我" : item.talkerInfo?.Remark || item.talkerInfo?.strNickName,
           sendMsg: item.TypeName == '文本' ? item.StrContent : `[${item.TypeName}]`,
           msgType: item.TypeName,
           time: item.CreateTime

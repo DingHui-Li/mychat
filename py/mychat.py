@@ -65,7 +65,7 @@ class ApiHTTPRequestHandler(BaseHTTPRequestHandler):
             try:
                 params = json.loads(post_data.decode('utf-8'))
                 if params['wxPath']:
-                    outPath=decryptionWxDb(params['key'],params['wxPath'])
+                    outPath=decryptionWxDb(params['key'],params['wxPath'],params['wxid'])
                     response={'data':{'outDbPath':outPath}}
             except Exception as e:
                 self.send_response(400)
@@ -130,8 +130,8 @@ def run(server_class=HTTPServer, handler_class=ApiHTTPRequestHandler, port=4556)
     print(f'Starting httpd server on port {port}...')
     httpd.serve_forever()
 
-def decryptionWxDb(key,dbPath):
-    outPath=os.getcwd()+'/wxDb'
+def decryptionWxDb(key,dbPath,wxid):
+    outPath=os.getcwd()+'/wxDb/'+wxid
     if not os.path.exists(outPath):
         os.makedirs(outPath)
     if not os.path.exists(outPath+'/Multi'):

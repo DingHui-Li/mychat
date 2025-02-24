@@ -18,6 +18,8 @@
         <div class="msg-content">
           <div class="nickname" v-if="!data.isSender && chatRoomInfo">{{ talkerDisplayName }}</div>
           <div class="text" v-if="props.data.TypeName == '文本'">{{ props.data.StrContent }}</div>
+          <img class="emoji" v-else-if="props.data.TypeName == '动画表情'" :src="data.StrContent"
+            referrerpolicy="no-referrer" />
           <div v-else class="other-msg">[{{ props.data.TypeName }}](暂未支持此类型消息)</div>
           <div class="actions">
             <div class="btns"></div>
@@ -136,6 +138,12 @@ const talkerDisplayName = computed(() => {
         color: #333;
         overflow: hidden;
         user-select: text;
+      }
+
+      .emoji {
+        max-width: 200px;
+        height: fit-content;
+        border-radius: 15px;
       }
 
       .actions {

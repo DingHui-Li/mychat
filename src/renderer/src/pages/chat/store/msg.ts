@@ -1,6 +1,5 @@
 import { ref, nextTick } from 'vue'
 import { activeSession } from './session'
-import { XMLParser } from 'fast-xml-parser'
 
 export const msgList = ref<Array<Msg>>([])
 export const chatRoomInfo = ref<{
@@ -41,7 +40,6 @@ export function getMsgList(username) {
   return window
     .findMsgDb(username)
     .then(async (res) => {
-      let xmlParser = new XMLParser()
       res = res.map((item, index) => {
         item.index = index
         if ((!item.talker || !item.talkerInfo) && !item.IsSender) {
@@ -54,9 +52,6 @@ export function getMsgList(username) {
             item.talkerInfo.Remark =
               chatRoomInfo.value.DisplayNameList[index] || item.talkerInfo?.strNickName
           }
-        }
-        if (item.StrContent) {
-          item.StrContent = xmlParser.parse(item.StrContent)?.revokemsg || item.StrContent
         }
         return item
       })

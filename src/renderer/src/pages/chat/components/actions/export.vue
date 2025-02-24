@@ -16,6 +16,8 @@
     </el-select>
     <el-button class="btn" type="primary" :disabled="disabled" style="margin-top: 60px;" @click="exportJSON">导出为
       JSON</el-button>
+    <el-button class="btn" type="primary" :disabled="disabled" @click="exportTXT">导出为
+      TXT</el-button>
     <el-button @click="exportHtmlPopup = true" :class="['btn']" type="primary" :disabled="disabled">导出为 HTML</el-button>
     <el-dialog v-model="exportHtmlPopup">
       <div class="export-html">
@@ -116,6 +118,30 @@ function exportHtml() {
         exportHtmlPopup.value = false
       })
     })
+}
+function exportTXT() {
+  let exportList: Array<any> = []
+  let startTime = filterTime.value[0].getTime() / 1000
+  let endTime = filterTime.value[1].getTime() / 1000
+  msgList.value.forEach(item => {
+    if (item.CreateTime >= startTime && item.CreateTime <= endTime) {
+      exportList.push(`
+      ${item.IsSender ? "我" : (item.talkerInfo.Remark || item.talkerInfo.strNickName || item.StrTalker)}
+      ${new Date(item.CreateTime * 1000).format('yyyy-MM-dd hh:mm:ss')}
+      ${item.TypeName == '文本' ? item.StrContent : ('[' + item.TypeName + ']')}\n
+      `)
+    }
+  })
+  let fileName = getExportFileName('txt')
+
+  // @ts-ignore (define in dts)
+  window.exportFile({
+    content: exportList.join('\n'),
+    name: fileName,
+    type: ['txt']
+  }).catch(err => {
+    console.log(err)
+  })
 }
 
 function getExportFileName(type = 'json') {

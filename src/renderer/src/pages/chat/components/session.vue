@@ -5,7 +5,7 @@
         <div :key="item.strUsrName" :class="['item', index == activeSessionIndex && 'active']"
           @click="handleClick(index)">
           <div class="avatar">
-            <img v-if="item.avatar" :src="item.avatar" alt="">
+            <img v-if="item.avatar" :src="item.avatar" alt="" referrerpolicy="no-referrer" />
             <span v-else>{{ item.strNickName[0] }}</span>
           </div>
           <div class="info">
@@ -38,7 +38,6 @@ onMounted(() => {
   getList()
 })
 onActivated(() => {
-
   setTimeout(() => {
     if (activeSessionIndex.value >= 0) {
       listEl.value?.scrollToIndex(activeSessionIndex.value, { smooth: true })

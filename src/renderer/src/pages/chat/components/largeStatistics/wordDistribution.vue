@@ -188,6 +188,7 @@ function renderWordCloud() {
     flex-wrap: wrap;
     background-color: #fff;
     padding: 10px;
+    padding-bottom: 15px;
     border-radius: 20px;
 
     .chart-box {

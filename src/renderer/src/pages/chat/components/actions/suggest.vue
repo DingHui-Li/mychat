@@ -58,7 +58,7 @@ async function startAnaly() {
   try {
     let chatData = msgList.value.slice(-100).map(item => {
       return {
-        sender: item.IsSender ? "我" : item.talkerInfo?.strNickName,
+        sender: item.IsSender ? "我" : item.talkerInfo?.Remark || item.talkerInfo?.strNickName,
         sendMsg: item.TypeName == '文本' ? item.StrContent : `[${item.TypeName}]`,
         msgType: item.TypeName,
         time: item.CreateTime
