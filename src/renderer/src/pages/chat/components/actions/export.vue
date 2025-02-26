@@ -14,14 +14,22 @@
       <el-option v-for="item in msgTypeList" :key="item.key" :label="item.label" :value="item.key"
         :disabled="item.disabled" />
     </el-select>
+    <div style="font-size: 14px;margin-top: 15px;">所选消息数：{{ exportList.length }}</div>
     <el-button class="btn" type="primary" :disabled="disabled" style="margin-top: 60px;" @click="exportJSON">导出为
       JSON</el-button>
+    <el-tooltip placement="top" content="支持最多一次性导出100条消息">
+      <el-button class="btn" type="primary" :disabled="disabled || exportList.length > 100"
+        @click="openExportHtmlPopup('img')">导出为
+        图片
+      </el-button>
+    </el-tooltip>
     <el-button class="btn" type="primary" :disabled="disabled" @click="exportTXT">导出为
       TXT</el-button>
-    <el-button @click="exportHtmlPopup = true" :class="['btn']" type="primary" :disabled="disabled">导出为 HTML</el-button>
+    <el-button @click="openExportHtmlPopup('html')" :class="['btn']" type="primary" :disabled="disabled">导出为
+      HTML</el-button>
     <el-dialog v-model="exportHtmlPopup">
-      <div class="export-html">
-        <comExportHtml ref="exportHtmlEl" :filter-time="filterTime" :filter-msg-type="filterMsgType" />
+      <div class="export-html" ref="exportHtmlEl">
+        <comExportHtml :filter-time="filterTime" :filter-msg-type="filterMsgType" />
       </div>
       <div class="actions">
         <el-button plain type="info" @click="exportHtmlPopup = false">取消</el-button>
@@ -42,7 +50,7 @@ import zhCn from 'element-plus/es/locale/lang/zh-cn'
 import comExportHtml from './_com_/exportHtml.vue'
 import { renderToString } from '@vue/server-renderer';
 import { shortcuts, msgStyle, msgTypeList } from './_com_/export'
-
+import html2canvas from 'html2canvas'
 
 const filterMsgType = ref(['文本'])
 const filterTime = ref([
@@ -54,28 +62,36 @@ const disabled = computed(() => {
 })
 const exportHtmlPopup = ref(false)
 const exportHtmlEl = ref()
+const exportHtmlAction = ref('html')//img
 
-function exportJSON() {
-  let exportList: Array<any> = []
+const exportList = computed(() => {
   let startTime = filterTime.value[0].getTime() / 1000
   let endTime = filterTime.value[1].getTime() / 1000
-  // exportList = msgList.value.filter(item => {
-  //   return item.CreateTime >= startTime && item.CreateTime <= endTime
-  // })
-  msgList.value.forEach(item => {
-    if (item.CreateTime >= startTime && item.CreateTime <= endTime) {
-      exportList.push({
-        ...item,
-        BytesExtra: "",
-        CompressContent: ""
-      })
-    }
+  return msgList.value.filter(item => {
+    return (item.CreateTime >= startTime && item.CreateTime <= endTime)
+  })
+})
+
+
+function openExportHtmlPopup(action) {
+  exportHtmlAction.value = action
+  exportHtmlPopup.value = true
+}
+
+function exportJSON() {
+  let t: Array<any> = []
+  exportList.value.forEach(item => {
+    t.push({
+      ...item,
+      BytesExtra: "",
+      CompressContent: ""
+    })
   })
   let fileName = getExportFileName('json')
 
   // @ts-ignore (define in dts)
   window.exportFile({
-    content: JSON.stringify(exportList),
+    content: JSON.stringify(t),
     name: fileName,
     type: ['json']
   }).catch(err => {
@@ -84,8 +100,11 @@ function exportJSON() {
 }
 
 function exportHtml() {
+  if (exportHtmlAction.value == 'img') {
+    exportImg()
+    return
+  }
   let fileName = getExportFileName('html')
-  console.log(exportHtmlEl.value)
   renderToString(createSSRApp(comExportHtml,
     {
       filterMsgType: filterMsgType.value,
@@ -120,27 +139,34 @@ function exportHtml() {
     })
 }
 function exportTXT() {
-  let exportList: Array<any> = []
-  let startTime = filterTime.value[0].getTime() / 1000
-  let endTime = filterTime.value[1].getTime() / 1000
-  msgList.value.forEach(item => {
-    if (item.CreateTime >= startTime && item.CreateTime <= endTime) {
-      exportList.push(`
+  let t: Array<any> = []
+  exportList.value.forEach(item => {
+    t.push(`
       ${item.IsSender ? "我" : (item.talkerInfo.Remark || item.talkerInfo.strNickName || item.StrTalker)}
       ${new Date(item.CreateTime * 1000).format('yyyy-MM-dd hh:mm:ss')}
       ${item.TypeName == '文本' ? item.StrContent : ('[' + item.TypeName + ']')}\n
       `)
-    }
   })
   let fileName = getExportFileName('txt')
 
   // @ts-ignore (define in dts)
   window.exportFile({
-    content: exportList.join('\n'),
+    content: t.join('\n'),
     name: fileName,
     type: ['txt']
   }).catch(err => {
     console.log(err)
+  })
+}
+
+function exportImg() {
+  let fileName = getExportFileName('png')
+  html2canvas(exportHtmlEl.value.querySelector('.list'), { logging: true, useCORS: true, allowTaint: true }).then(canvas => {
+    const dataURL = canvas.toDataURL('image/png');
+    const link = document.createElement('a');
+    link.download = fileName
+    link.href = dataURL;
+    link.click();
   })
 }
 
@@ -232,6 +258,18 @@ function getExportFileName(type = 'json') {
     border-radius: 10px;
     padding: 20px;
   }
+
+  &:deep(.el-dialog) {
+    width: 50vw;
+    min-width: 500px;
+    padding: 0;
+    border-radius: 10px;
+    overflow: hidden;
+
+    .el-dialog__header {
+      display: none;
+    }
+  }
 }
 
 .disabled {
@@ -247,5 +285,6 @@ function getExportFileName(type = 'json') {
 .actions {
   text-align: right;
   margin-top: 10px;
+  padding: 15px;
 }
 </style>./_com_/export

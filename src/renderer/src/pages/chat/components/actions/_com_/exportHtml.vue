@@ -32,6 +32,9 @@ let exportList = computed(() => {
   .list {
     height: fit-content;
     overflow: auto;
+    background-color: #f5f5f5;
+    padding: 15px 15px;
+    padding-right: 0;
   }
 }
 </style>

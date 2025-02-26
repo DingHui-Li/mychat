@@ -62,7 +62,7 @@ export const msgStyle = `
 .export-html {
   height: 100vh;
   width:100vw;
-  background:#eeeeee;
+  background:#fff;
   overflow: hidden;
 
   .list {
@@ -72,7 +72,7 @@ export const msgStyle = `
     max-width:1000px;
     margin:0 auto;
     padding:30px 15px;
-    background:#ffffff;
+    background:#f5f5f5;
     box-sizing: border-box;
   }
 }
@@ -96,12 +96,16 @@ export const msgStyle = `
 
 .single-msg {
   display: flex;
-  align-items: flex-end;
+  align-items: center;
   margin-bottom: 10px;
 
+  &.special {
+    align-items: flex-start;
+  }
+
   .avatar-box {
-    width: 40px;
-    height: 40px;
+    width: 35px;
+    height: 35px;
     overflow: hidden;
     font-size: 20px;
     font-weight: bold;
@@ -114,7 +118,7 @@ export const msgStyle = `
       align-items: center;
       justify-content: center;
       align-items: center;
-      border-radius: 8px;
+      // border-radius: 8px;
       background-color: #eee;
       overflow: hidden;
     }
@@ -126,79 +130,78 @@ export const msgStyle = `
   }
 
   .msg-content-box {
-    display: flex;
     position: relative;
     flex: 1;
     overflow: hidden;
+    padding: 0 5px;
 
-    .triangle {
-      position: absolute;
-      left: 0;
-      bottom: 0;
-      width: 0;
-      height: 0;
-      border-bottom: 10px solid #7879EF10;
-      border-left: 8px solid transparent;
+    .nickname {
+      position: relative;
+      font-size: 12px;
+      color: #999;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      padding-left: 10px;
     }
 
-    .msg-content {
+    .emoji {
+      max-width: 200px;
+      height: fit-content;
+      margin: 0 10px;
+    }
+
+    .msg-box {
+      display: inline-block;
       position: relative;
-      width: fit-content;
-      max-width: 100%;
-      border-radius: 12px;
-      padding: 10px;
-      background-color: #7879EF10;
-      margin-left: 8px;
-      border-bottom-left-radius: 0;
-      overflow: hidden;
 
-      .actions {
-        display: flex;
-        justify-content: space-between;
+      .triangle {
+        position: absolute;
+        left: -7px;
+        top: 50%;
+        transform: translateY(-50%);
+        width: 0;
+        height: 0;
+        border: 8px solid transparent;
+        border-right: 10px solid #fff;
+      }
 
-        .time {
-          font-size: 12px;
-          color: #999;
+      .msg-content {
+        position: relative;
+        width: fit-content;
+        max-width: 100%;
+        border-radius: 4px;
+        padding: 6px 8px;
+        background-color: #fff;
+        margin-left: 8px;
+        overflow: hidden;
+        cursor: text;
+
+        .text {
+          font-size: 14px;
+          color: #333;
+          overflow: hidden;
+          user-select: text;
         }
       }
     }
 
     &.isSender {
-      justify-content: flex-end;
+      text-align: right;
 
       .triangle {
-        left: calc(100% - 8px);
-        border-bottom: 10px solid #7879EF;
-        border-left: none;
-        border-right: 8px solid transparent;
+        left: calc(100% - 10px);
+        border-right: none;
+        border-left: 8px solid #95EC69;
       }
 
       .msg-content {
         margin-left: 0;
         margin-right: 8px;
-        border-bottom-left-radius: 12px;
         border-bottom-right-radius: 0;
-        background-color: #7879EF;
+        background-color: #95EC69;
 
-        .text {
-          color: #fff;
-        }
+        .text {}
       }
-    }
-
-    .nickname {
-      position: relative;
-      top: -5px;
-      font-size: 12px;
-      color: #999;
-      overflow: hidden;
-      text-overflow: ellipsis;
-    }
-
-    .text {
-      font-size: 14px;
-      color: #333;
-      overflow: hidden;
     }
 
     .other-msg {

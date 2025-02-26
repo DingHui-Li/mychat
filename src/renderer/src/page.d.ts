@@ -1,6 +1,6 @@
 type Msg = {
   index: number
-  localId: number
+  MsgSvrID: string
   CreateTime: number
   DisplayContent: string
   IsSender: number

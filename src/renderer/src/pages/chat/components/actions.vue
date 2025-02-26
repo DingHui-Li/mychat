@@ -19,7 +19,7 @@ import { actions, handleChooseAction, activeAction } from '../store/index'
 <style lang="less" scoped>
 .actions {
   width: 100%;
-  background-color: #f9f9f9;
+  background-color: #fff;
   display: flex;
   flex-wrap: wrap;
   padding: 0 30px;
@@ -58,7 +58,7 @@ import { actions, handleChooseAction, activeAction } from '../store/index'
       width: 40px;
       height: 40px;
       border-radius: 10px;
-      background-color: #fff;
+      background-color: #f9f9f9;
       display: flex;
       flex-direction: column;
       justify-content: center;

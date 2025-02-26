@@ -24,7 +24,7 @@ const { AIing, callAI, AIResult, clearAICache } = useAI('dailyChatPeriods')
 defineExpose({
   AIAnaly: () => {
     if (!Object.keys(dailyPeriodForPerson).length) return
-    let prompt = `分析以下各用户不同时间段消息发送数量的数据:\n${JSON.stringify(dailyPeriodForPerson.value)}`
+    let prompt = `分析以下各用户不同时间段消息发送数量的数据(注意：这不是一天的数据):\n${JSON.stringify(dailyPeriodForPerson.value)}`
     callAI([prompt])
   },
   clearAICache

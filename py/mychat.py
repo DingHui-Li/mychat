@@ -33,12 +33,23 @@ class ApiHTTPRequestHandler(BaseHTTPRequestHandler):
             response = {'msg':"success"}
             try:
                 filtered_files = glob.glob(query_params['db_path'][0]+'/**/MSG*.db', recursive=True)
-                db_name=filtered_files[-1].replace(query_params['db_path'][0]+'\Msg','').replace("MSG", "de_MSG")
+                db_name=filtered_files[-2].replace(query_params['db_path'][0]+'\Msg','').replace("MSG", "de_MSG")
                 out_path=query_params['out_path'][0]+db_name
-                merge_real_time_db(query_params['key'][0],out_path,{"db_path":filtered_files[-1]})
+                # merge_real_time_db(query_params['key'][0],
+                #                     out_path,{"db_path":filtered_files[-2]}
+                #     )
+                for path in filtered_files:
+                    db_name=path.replace(query_params['db_path'][0]+'\Msg','').replace("MSG", "de_MSG")
+                    out_path=query_params['out_path'][0]+db_name
+                    merge_real_time_db(query_params['key'][0],
+                                    out_path,{"db_path":path}
+                    )
+                # merge_real_time_db(query_params['key'][0],
+                #                     out_path,
+                #                     list(map(lambda item:{"db_path":item},filtered_files))
+                #     )
                 # merge_real_time_db(query_params['key'][0],query_params['out_path'][0]+'/de_MicroMsg.db',{"db_path":query_params['db_path'][0]+'/Msg/MicroMsg.db'})
                 response['out_path']=out_path
-                response['db_path']=filtered_files[-1]
             except Exception as e:
                 self.send_response(400)
                 self.end_headers()

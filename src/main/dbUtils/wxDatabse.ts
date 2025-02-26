@@ -30,8 +30,7 @@ export async function initMsgDb() {
 
 ipcMain.handle('initWxDb', async (event, query) => {
   try {
-    await init(query)
-    return true
+    return init(query)
   } catch (err) {
     console.log(err)
     return false
@@ -39,8 +38,7 @@ ipcMain.handle('initWxDb', async (event, query) => {
 })
 ipcMain.handle('initWxMsgDb', async (event, query) => {
   try {
-    await initMsgDb()
-    return true
+    return initMsgDb()
   } catch (err) {
     console.log(err)
     return false
@@ -70,45 +68,52 @@ ipcMain.handle('findMsgDb', async (event, username = '') => {
     throw `查询对象不能为空`
   }
   let list: Array<any> = []
+  let msgIds = {}
+  let tempUserInfo = {}
   for (const db of MsgDbPool) {
-    console.log('查询msgDB,', username)
-    let result = db.exec(`
-      SELECT localId,Type,SubType,IsSender,CreateTime,StrTalker,StrContent,DisplayContent,CompressContent,BytesExtra
-      FROM MSG 
-      WHERE StrTalker=='${username}'
-      ORDER BY CreateTime ASC
-    `)
+    console.log(`查询msgDB,`, username)
+    const sql = `
+    SELECT MsgSvrID,Type,SubType,IsSender,CreateTime,StrTalker,StrContent,DisplayContent,CompressContent,BytesExtra
+    FROM MSG 
+    WHERE StrTalker=='${username}'
+    ORDER BY CreateTime ASC
+  `
+    let result = db.exec(sql)
     result = parseSQLResult(result)
     let xmlParser = new XMLParser({
       ignoreAttributes: false
     })
     for (const index in result) {
       let item = result[index]
+      if (msgIds[item.MsgSvrID]) {
+        continue //去重
+      }
+      msgIds[item.MsgSvrID] = true
       item.TypeName = parseMsgType(item.Type, item.SubType)
       if (!item.talker && item.BytesExtra && !item.IsSender) {
         try {
           item.talker = getTalker(item.BytesExtra)
-          item.talkerInfo = parseSQLResult(
-            MicroMsgDb.exec(`
+          if (tempUserInfo[item.talker]) {
+            item.talkerInfo = tempUserInfo[item.talker]
+          } else {
+            item.talkerInfo = parseSQLResult(
+              MicroMsgDb.exec(`
             SELECT A.smallHeadImgUrl,A.bigHeadImgUrl,B.UserName,B.Remark,B.NickName
             FROM ContactHeadImgUrl A INNER JOIN Contact B
             ON A.usrName=B.UserName
             WHERE A.UsrName=='${item.talker}'
           `)
-          )[0]
-          if (item.talkerInfo) {
-            item.talkerInfo.avatar =
-              item.talkerInfo.smallHeadImgUrl || item.talkerInfo.bigHeadImgUrl
-            item.talkerInfo.strNickName = item.talkerInfo.Remark || item.talkerInfo.NickName
-            delete item.talkerInfo.smallHeadImgUrl
-            delete item.talkerInfo.bigHeadImgUrl
+            )[0]
+            if (item.talkerInfo) {
+              item.talkerInfo.avatar =
+                item.talkerInfo.smallHeadImgUrl || item.talkerInfo.bigHeadImgUrl
+              item.talkerInfo.strNickName = item.talkerInfo.Remark || item.talkerInfo.NickName
+              delete item.talkerInfo.smallHeadImgUrl
+              delete item.talkerInfo.bigHeadImgUrl
+            }
+            tempUserInfo[item.talker] = item.talkerInfo
+            delete item.CompressContent
           }
-          // db.exec(`
-          //   UPDATE MSG
-          //   SET Talker=${item.talker},TalkerInfo=${JSON.stringify(item.talkerInfo)}
-          //   WHERE localId=${item.localId}
-          // `)
-          delete item.CompressContent
         } catch (e) {
           console.log(e)
         }
@@ -122,10 +127,12 @@ ipcMain.handle('findMsgDb', async (event, username = '') => {
           }
           // item.xmlParseResult = xmlParseResult
         }
-      } catch {}
+      } catch (err) {
+        console.log(err)
+      }
       delete item.BytesExtra
+      list.push(item)
     }
-    list.push(...result)
   }
   // console.log(list)
   return list.sort((a, b) => a.CreateTime - b.CreateTime)

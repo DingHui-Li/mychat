@@ -178,7 +178,7 @@ function clearCache() {
   .page-box {
     padding: 10px;
     height: fit-content;
-    background-color: #f5f5f5;
+    background-color: #fff;
 
     &:deep(hr) {
       margin: 8px 0;
@@ -189,21 +189,20 @@ function clearCache() {
     &:deep(.label) {
       position: relative;
       // padding-left: 10px;
-      width: fit-content;
+      // width: fit-content;
       margin-bottom: 5px;
 
-      &::before {
-        position: absolute;
-        left: 0;
-        bottom: -1px;
-        transform: translateY(-50%);
-        content: '';
-        width: 100%;
-        height: 6px;
-        background-color: var(--el-color-primary);
-        // border-radius: 5px;
-        opacity: 0.8;
-      }
+      // &::before {
+      //   position: absolute;
+      //   left: 0;
+      //   bottom: -5px;
+      //   transform: translateY(-50%);
+      //   content: '';
+      //   width: 100%;
+      //   height: 1px;
+      //   background-color: #000;
+      //   // border-radius: 5px;
+      // }
     }
   }
 

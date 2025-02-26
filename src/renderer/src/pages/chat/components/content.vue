@@ -15,7 +15,7 @@
     <div class="list">
       <VList ref="listEl" class="v-list" :data="msgList" #default="{ item, index }" style="height: 100%;"
         @scroll="onScroll">
-        <comSingleMsg :key="item.localId" :data="item" :prev-msg="index > 0 && msgList[index - 1]" />
+        <comSingleMsg :key="item.MsgSvrID" :data="item" :prev-msg="index > 0 && msgList[index - 1]" />
       </VList>
     </div>
   </div>
@@ -54,7 +54,8 @@ function getRealtimeMsg() {
             //数据库文件更新后需要重新读取
             // @ts-ignore (define in dts)
             await window.initWxMsgDb(wxDbPath.value)
-            getMsgList(activeSession.value?.strUsrName)
+            await getMsgList(activeSession.value?.strUsrName)
+            refreshing.value = false
             ElMessage({
               message: '更新消息成功!',
               type: 'success',
@@ -62,11 +63,10 @@ function getRealtimeMsg() {
           }
         }).catch((err) => {
           ElMessage.error('更新消息错误!' + err,)
-        }).finally(() => {
           refreshing.value = false
         })
     }
-  }).finally(() => {
+  }).catch(() => {
     refreshing.value = false
   })
 }
@@ -80,6 +80,7 @@ function getRealtimeMsg() {
   overflow: hidden;
   display: flex;
   flex-direction: column;
+  background-color: #f5f5f5;
 
 
   .info {

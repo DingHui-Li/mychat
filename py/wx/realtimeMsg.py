@@ -49,7 +49,8 @@ def merge_real_time_db(key, merge_path: str, db_paths: [dict] or dict, real_time
     cmd = f'{real_time_exe_path} "{key}" "{merge_path}" "{endbs}"'
     # os.system(cmd)
     # wx_core_loger.info(f"合并实时数据库命令：{cmd}")
-    p = subprocess.Popen(cmd, shell=False, stdout=subprocess.PIPE, stderr=subprocess.PIPE, cwd=merge_path_base,creationflags=subprocess.CREATE_NO_WINDOW)
+    p = subprocess.Popen(cmd, shell=False, stdout=subprocess.PIPE, stderr=subprocess.PIPE, cwd=merge_path_base,
+                        creationflags=subprocess.CREATE_NO_WINDOW)
     out, err = p.communicate()  # 查看返回值
     if out and out.decode("utf-8").find("SUCCESS") >= 0:
         print(f"合并实时数据库成功{out}")
