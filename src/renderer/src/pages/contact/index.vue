@@ -2,14 +2,15 @@
   <div class="contacts-page">
     <div class="list-container">
       <div class="filter">
-        <el-input v-model="input" placeholder="搜索联系人" :clearable="true" @input="searchContact">
-          <template #prefix>
-            <el-icon class="el-input__icon">
-              <Search />
-            </el-icon>
+        <el-input v-model="input" placeholder="搜索联系人" :clearable="true" @clear="searchContact">
+          <template #append>
+            <el-button circle :icon="Search" @click="searchContact" style="background-color: #fff;" />
           </template>
         </el-input>
         <el-button :icon="sort == 'desc' ? SortDown : SortUp" circle @click="handleChangeSort"></el-button>
+        <el-select v-model="type" style="width:80px;margin-left: 5px;" placeholder="所有">
+          <el-option v-for="item in typeList" :key="item.value" :label="item.label" :value="item.value" />
+        </el-select>
       </div>
       <div class="list" v-show="searchList.length">
         <div v-for="(item, index) in searchList">
@@ -35,7 +36,7 @@
         <VList class="v-list" ref="listEl" :data="displayList" #default="{ item, index }" style="height: 100%;"
           @scroll="onScroll">
           <div :key="item.UserName">
-            <div class="first-letter" v-if="index == 0 || list[index - 1].FirstLetter != item.FirstLetter">{{
+            <div class="first-letter" v-if="index == 0 || list[index - 1]?.FirstLetter != item.FirstLetter">{{
           item.FirstLetter
         }}
             </div>
@@ -63,15 +64,28 @@
   </div>
 </template>
 <script setup lang="ts">
-import { ref, onMounted, onActivated } from 'vue'
-import { list, getList, getLabelMap, activeContact, handleChooseContact } from './store/index'
+import { ref, onMounted, onActivated, watch } from 'vue'
+import { list, getList, getLabelMap, activeContact, handleChooseContact, type } from './store/index'
 import { Search, SortUp, SortDown } from '@element-plus/icons-vue'
-import { debounce } from '@renderer/util/util'
 import comInfo from './components/info.vue'
 // @ts-ignore (define in dts)
 import { VList } from "virtua/vue";
 
 const listEl = ref()
+const typeList = [
+  {
+    value: '',
+    label: '所有',
+  },
+  {
+    value: '(2)',
+    label: '群聊',
+  },
+  {
+    value: '(1,3,513)',
+    label: '好友',
+  },
+]
 
 onActivated(() => {
   listEl.value?.scrollTo(Number(window.localStorage['contactPageScrollTop']))
@@ -83,7 +97,7 @@ const displayList = ref<Array<Contact>>([])
 const searchList = ref<Array<Contact>>([])
 const loading = ref(true)
 
-const searchContact = debounce(() => {
+function searchContact() {
   if (input.value) {
     searchList.value = displayList.value.filter(item => {
       return item.NickName?.includes(input.value) || item.Remark?.includes(input.value) || item.QuanPin?.includes(input.value) || item.RemarkQuanPin?.includes(input.value)
@@ -91,7 +105,7 @@ const searchContact = debounce(() => {
   } else {
     searchList.value = []
   }
-}, 1000)
+}
 
 onMounted(() => {
   getLabelMap()
@@ -100,6 +114,10 @@ onMounted(() => {
   }).finally(() => {
     loading.value = false
   })
+})
+
+watch(list, () => {
+  displayList.value = [...list.value]
 })
 
 function handleChangeSort() {
@@ -169,6 +187,12 @@ function onScroll(e) {
       .el-input__wrapper {
         box-shadow: none;
         background-color: #fff;
+      }
+
+      .el-input-group__append {
+        background-color: #fff;
+        border: none;
+        box-shadow: none;
       }
     }
   }

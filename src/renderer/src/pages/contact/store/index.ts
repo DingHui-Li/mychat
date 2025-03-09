@@ -1,14 +1,17 @@
-import { ref } from 'vue'
+import { ref, watch } from 'vue'
 import { Buffer } from 'buffer'
 
 export const list = ref<Array<Contact>>([])
 export const activeContact = ref<Contact>()
 export const labelMap = ref()
+export const type = ref('')
+
+watch(type, () => {
+  getList()
+})
 
 export function getList() {
-  return window
-    .dbQuery({
-      query: `
+  let query = `
       SELECT A.UserName,A.Alias,A.ReMark,A.NickName,A.QuanPin,A.RemarkQuanPin,A.LabelIdList,A.ChatRoomType,A.ExtraBuf,
       B.smallHeadImgUrl,B.bigHeadImgUrl
       FROM Contact A
@@ -18,7 +21,13 @@ export function getList() {
       AND A.UserName != 'notification_messages'
       AND A.UserName != "notifymessage"
       AND A.UserName != "weixin"
-    `,
+    `
+  if (type.value) {
+    query += ` AND A.Type IN ${type.value}`
+  }
+  return window
+    .dbQuery({
+      query,
       dbname: 'de_MicroMsg'
     })
     .then((res) => {
@@ -34,7 +43,9 @@ export function getList() {
             delete item.ExtraBuf
           }
         })
-        list.value = res.result.sort((a, b) => a.FirstLetter?.localeCompare(b.FirstLetter))
+        list.value = res.result
+          .filter((item) => item.FirstLetter !== undefined)
+          .sort((a, b) => a.FirstLetter?.localeCompare(b.FirstLetter))
       }
     })
 }

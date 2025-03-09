@@ -42,7 +42,9 @@
 
 ## 预览
 
+统计分析报告：
 <img src="./resources/statistics.png" width="100%" height="100%" style="max-width:750px">
+运行截图：
 <img src="./resources/preview1.png" width="100%" height="100%" style="max-width:750px">
 <img src="./resources/preview2.png" width="100%" height="100%" style="max-width:750px">
 <img src="./resources/preview3.png" width="100%" height="100%" style="max-width:750px">
