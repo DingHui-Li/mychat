@@ -6,7 +6,7 @@
     </div>
     <div class="item">
       <div class="label">AI模型
-        <el-tooltip placement="top" content="支持DeepSeek官网和硅基流动平台的模型">
+        <el-tooltip placement="top" content="例如：Pro/deepseek-ai/DeepSeek-V3">
           <el-icon class="icon">
             <QuestionFilled />
           </el-icon>
@@ -18,7 +18,7 @@
       </div>
     </div>
     <div class="item">
-      <div class="label">ApiKey
+      <div class="label">API密钥
         <el-tooltip placement="top" content="请自行申请">
           <el-icon class="icon">
             <QuestionFilled />
@@ -33,10 +33,10 @@
       </div>
     </div>
     <div class="item">
-      <div class="label">BaseUrl
+      <div class="label">API域名
       </div>
       <div :class="['value', lockForm && 'disabled']">
-        <el-select v-model="form.baseURL">
+        <el-select v-model="form.baseURL" allow-create filterable>
           <el-option v-for="item in BaseUrlList" :key="item.url" :label="item.label" :value="item.url"></el-option>
         </el-select>
       </div>

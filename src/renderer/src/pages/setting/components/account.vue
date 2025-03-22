@@ -10,7 +10,7 @@
     <el-tooltip content="新消息可能会在微信客户端关闭后同步" placement="top">
       <el-button class="btn" type="success" text bg @click="handleSyncWxDb">同步数据</el-button>
     </el-tooltip>
-    <el-tooltip content="退出并清空缓存数据" placement="top">
+    <el-tooltip content="退出并删除所有数据" placement="top">
       <el-button class="btn" type="danger" text bg @click="logout" style="width:85px;margin-top: 30px">退出</el-button>
     </el-tooltip>
   </div>
